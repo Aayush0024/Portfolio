@@ -323,76 +323,232 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-/* ── WHATSAPP CHAT WIDGET ── */
-(function () {
-  const whatsappFloat = document.getElementById('whatsappFloat');
-  const whatsappDialog = document.getElementById('whatsappDialog');
-  const whatsappClose = document.getElementById('whatsappClose');
-  const whatsappInput = document.getElementById('whatsappInput');
-  const whatsappSend = document.getElementById('whatsappSend');
+/* ── CONTACT DIALOG FUNCTIONS ── */
+function openContactDialog() {
+  const dialog = document.getElementById('contactDialog');
+  const overlay = document.getElementById('contactOverlay');
   
-  if (!whatsappFloat || !whatsappDialog) return;
+  if (dialog && overlay) {
+    overlay.classList.add('show');
+    dialog.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+}
 
-  // Your WhatsApp number (replace with your actual number)
-  const whatsappNumber = '+917888376973'; // Replace with your actual WhatsApp number
+function closeContactDialog() {
+  const dialog = document.getElementById('contactDialog');
+  const overlay = document.getElementById('contactOverlay');
+  
+  if (dialog && overlay) {
+    overlay.classList.remove('show');
+    dialog.classList.remove('show');
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+}
+
+// Close dialog when clicking on overlay
+document.addEventListener('click', function(e) {
+  const overlay = document.getElementById('contactOverlay');
+  const dialog = document.getElementById('contactDialog');
+  
+  if (overlay && overlay.classList.contains('show') && 
+      e.target === overlay) {
+    closeContactDialog();
+  }
+});
+
+// Close dialog on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeContactDialog();
+  }
+});
+
+/* ── AI CHATBOT WIDGET ── */
+(function () {
+  const aiChatFloat = document.getElementById('aiChatFloat');
+  const aiChatDialog = document.getElementById('aiChatDialog');
+  const aiChatClose = document.getElementById('aiChatClose');
+  const aiChatInput = document.getElementById('aiChatInput');
+  const aiChatSend = document.getElementById('aiChatSend');
+  const aiChatBody = document.getElementById('aiChatBody');
+  
+  if (!aiChatFloat || !aiChatDialog) return;
+
+  // AI Knowledge base about Aayush
+  const aiKnowledge = {
+    name: "Aayush",
+    role: "Full-Stack Developer",
+    location: "Jalandhar, India",
+    skills: ["React", "Node.js", "MongoDB", "JavaScript", "TypeScript", "HTML", "CSS", "Express", "Firebase", "Python", "C++", "Java"],
+    projects: [
+      {
+        name: "Fone Factory",
+        tech: "MERN Stack",
+        description: "Mobile store with filters, Google authentication, and payment gateway integration"
+      },
+      {
+        name: "FarmFresh", 
+        tech: "HTML, CSS, JavaScript, PHP",
+        description: "Local farmers marketplace"
+      },
+      {
+        name: "AI Chatbot (Poem Refiner)",
+        tech: "AI, Gemini 2.0 Flash",
+        description: "Chatbot to refine poems with tone, rhyme, and style suggestions"
+      },
+      {
+        name: "Bulletin Board",
+        tech: "MERN Stack", 
+        description: "Community board app with real-time posts and user authentication"
+      },
+      {
+        name: "To-do List Application",
+        tech: "React, TypeScript, Firebase",
+        description: "Productivity app with drag-and-drop task management"
+      },
+      {
+        name: "AI Mental Health Assistant",
+        tech: "JavaScript, REST API, CSS",
+        description: "Empathetic AI chatbot for mental wellness support"
+      }
+    ],
+    certifications: [
+      "Full-Stack Web Development (Coursera)",
+      "Google AI Essentials (Google)",
+      "The Complete JavaScript Course (Udemy)",
+      "Data Structures & Algorithms (NPTEL)",
+      "Meta Front-End Developer (Meta)",
+      "Problem Solving (HackerRank)"
+    ],
+    about: "I'm a passionate full-stack developer with a love for building elegant solutions to complex problems. I enjoy working across the entire stack — from crafting pixel-perfect UIs to designing robust backend systems. When I'm not coding, you'll find me exploring new technologies, contributing to open source, or enjoying a good cup of coffee. I'm currently open to new opportunities and collaborations."
+  };
+
+  // Generate AI response based on user input
+  function generateAIResponse(userMessage) {
+    const message = userMessage.toLowerCase();
+    
+    // Greetings
+    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+      return "Hello! 👋 It's great to connect with you. I'm here to tell you all about Aayush's skills, projects, and experience. What would you like to know?";
+    }
+    
+    // Skills related questions
+    if (message.includes('skills') || message.includes('technologies') || message.includes('tech stack')) {
+      return `Aayush is proficient in: ${aiKnowledge.skills.slice(0, 5).join(', ')}, ${aiKnowledge.skills.slice(5).join(', ')}. He works across the full stack, from frontend React applications to backend Node.js services and databases.`;
+    }
+    
+    // Projects related questions
+    if (message.includes('projects') || message.includes('project') || message.includes('built') || message.includes('created')) {
+      const projectList = aiKnowledge.projects.map(p => `• **${p.name}**: ${p.description} (${p.tech})`).join('\n');
+      return `Aayush has worked on several impressive projects:\n${projectList}\n\nWhich project would you like to know more about?`;
+    }
+    
+    // Experience/About questions
+    if (message.includes('experience') || message.includes('about') || message.includes('who') || message.includes('background')) {
+      return aiKnowledge.about;
+    }
+    
+    // Location questions
+    if (message.includes('where') || message.includes('location') || message.includes('based') || message.includes('city')) {
+      return `Aayush is based in ${aiKnowledge.location}. He's available for remote opportunities and collaborations worldwide!`;
+    }
+    
+    // Role questions
+    if (message.includes('role') || message.includes('job') || message.includes('position') || message.includes('what do you do')) {
+      return `Aayush is a ${aiKnowledge.role}. He builds scalable, data-driven applications and web platforms, working across the entire technology stack.`;
+    }
+    
+    // Certifications questions
+    if (message.includes('certification') || message.includes('certified') || message.includes('courses') || message.includes('learning')) {
+      const certList = aiKnowledge.certifications.map(c => `• ${c}`).join('\n');
+      return `Aayush has completed several valuable certifications:\n${certList}\n\nHe's committed to continuous learning and staying updated with the latest technologies.`;
+    }
+    
+    // Contact/Availability questions
+    if (message.includes('contact') || message.includes('hire') || message.includes('available') || message.includes('opportunity')) {
+      return `Aayush is currently open to new opportunities and collaborations! You can reach out through the contact page on this portfolio. He's particularly interested in full-stack development roles where he can work on challenging projects.`;
+    }
+    
+    // Default response
+    return `I can tell you about Aayush's skills (${aiKnowledge.skills.length}+ technologies), projects (${aiKnowledge.projects.length} completed), certifications, and experience. Feel free to ask about his technical skills, specific projects, or how to get in touch!`;
+  }
 
   // Open/close dialog
-  whatsappFloat.addEventListener('click', () => {
-    whatsappDialog.classList.toggle('show');
-    if (whatsappDialog.classList.contains('show')) {
-      whatsappInput.focus();
+  aiChatFloat.addEventListener('click', () => {
+    aiChatDialog.classList.toggle('show');
+    if (aiChatDialog.classList.contains('show')) {
+      aiChatInput.focus();
     }
   });
 
-  whatsappClose.addEventListener('click', () => {
-    whatsappDialog.classList.remove('show');
+  aiChatClose.addEventListener('click', () => {
+    aiChatDialog.classList.remove('show');
   });
 
   // Close dialog when clicking outside
   document.addEventListener('click', (e) => {
-    if (whatsappDialog.classList.contains('show') && 
-        !whatsappDialog.contains(e.target) && 
-        !whatsappFloat.contains(e.target)) {
-      whatsappDialog.classList.remove('show');
+    if (aiChatDialog.classList.contains('show') && 
+        !aiChatDialog.contains(e.target) && 
+        !aiChatFloat.contains(e.target)) {
+      aiChatDialog.classList.remove('show');
     }
   });
 
   // Send message
-  function sendWhatsAppMessage() {
-    const message = whatsappInput.value.trim();
+  function sendAIMessage() {
+    const message = aiChatInput.value.trim();
     if (!message) {
       showToast('Please type a message first');
       return;
     }
 
-    // Format message for WhatsApp
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    // Add user message
+    const userMsgDiv = document.createElement('div');
+    userMsgDiv.className = 'ai-message user';
+    userMsgDiv.textContent = message;
+    aiChatBody.appendChild(userMsgDiv);
+
+    // Clear input
+    aiChatInput.value = '';
     
-    // Open WhatsApp in new tab
-    window.open(whatsappUrl, '_blank');
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'ai-typing';
+    typingDiv.innerHTML = '<div class="ai-typing-dot"></div><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div>';
+    aiChatBody.appendChild(typingDiv);
     
-    // Clear input and close dialog
-    whatsappInput.value = '';
-    whatsappDialog.classList.remove('show');
-    
-    showToast('Opening WhatsApp...');
+    // Scroll to bottom
+    aiChatBody.scrollTop = aiChatBody.scrollHeight;
+
+    // Generate and show AI response after delay
+    setTimeout(() => {
+      typingDiv.remove();
+      
+      const aiResponse = generateAIResponse(message);
+      const aiMsgDiv = document.createElement('div');
+      aiMsgDiv.className = 'ai-message bot';
+      aiMsgDiv.textContent = aiResponse;
+      aiChatBody.appendChild(aiMsgDiv);
+      
+      // Scroll to bottom
+      aiChatBody.scrollTop = aiChatBody.scrollHeight;
+    }, 1500);
   }
 
-  whatsappSend.addEventListener('click', sendWhatsAppMessage);
+  aiChatSend.addEventListener('click', sendAIMessage);
 
   // Send message on Enter key
-  whatsappInput.addEventListener('keypress', (e) => {
+  aiChatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendWhatsAppMessage();
+      sendAIMessage();
     }
   });
 
   // Auto-resize textarea
-  whatsappInput.addEventListener('input', () => {
-    whatsappInput.style.height = 'auto';
-    whatsappInput.style.height = Math.min(whatsappInput.scrollHeight, 100) + 'px';
+  aiChatInput.addEventListener('input', () => {
+    aiChatInput.style.height = 'auto';
+    aiChatInput.style.height = Math.min(aiChatInput.scrollHeight, 80) + 'px';
   });
 })();
-
