@@ -243,8 +243,13 @@ document.querySelectorAll('.canvas-divider').forEach(initWaveDivider);
 const fadeEls = document.querySelectorAll('.fade-in');
 if (fadeEls.length) {
   const io = new IntersectionObserver(entries => {
+    let delay = 0;
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        setTimeout(() => { e.target.classList.add('visible'); }, delay);
+        delay += 100;
+        io.unobserve(e.target);
+      }
     });
   }, { threshold: 0.1 });
   fadeEls.forEach(el => io.observe(el));
