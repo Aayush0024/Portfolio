@@ -276,7 +276,7 @@ nav ul a.active::after {
 
 .hero-photo {
   width: 100%;
-  max-width: 420px;
+  max-width: 320px;
   border-radius: 20px;
   border: 1px solid var(--border-solid);
   background: var(--bg2-glass);
@@ -287,7 +287,29 @@ nav ul a.active::after {
   font-size: 6rem;
   overflow: hidden;
   justify-self: center;
-  box-shadow: 0 0 60px rgba(124, 58, 237, 0.2);
+  position: relative;
+  /* glow pulse */
+  box-shadow:
+    0 0 0 0 rgba(124, 58, 237, 0.5),
+    0 0 40px rgba(124, 58, 237, 0.2);
+  animation: hero-photo-pulse 3s ease-in-out infinite;
+}
+
+@keyframes hero-photo-pulse {
+  0%   { box-shadow: 0 0 0 0px rgba(124,58,237,0.45), 0 0 40px rgba(124,58,237,0.15); }
+  50%  { box-shadow: 0 0 0 12px rgba(124,58,237,0.0), 0 0 60px rgba(167,139,250,0.35); }
+  100% { box-shadow: 0 0 0 0px rgba(124,58,237,0.45), 0 0 40px rgba(124,58,237,0.15); }
+}
+
+/* floating drift */
+.hero-photo-wrap {
+  justify-self: center;
+  animation: hero-float 5s ease-in-out infinite;
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
 }
 
 .hero-photo img {
@@ -1597,8 +1619,12 @@ footer nav ul a { font-size: 0.8rem; }
     gap: 2.5rem;
   }
 
+  .hero-photo-wrap {
+    justify-self: center;
+  }
+
   .hero-photo {
-    max-width: 260px;
+    max-width: 240px;
     font-size: 4rem;
     justify-self: center;
   }
